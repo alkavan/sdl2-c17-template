@@ -1,0 +1,7 @@
+#ifndef SDL2_C17_CONFIG_H
+#define SDL2_C17_CONFIG_H
+
+#define SCREEN_WIDTH   1280
+#define SCREEN_HEIGHT  720
+
+#endif //SDL2_C17_CONFIG_H
