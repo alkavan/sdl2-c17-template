@@ -30,6 +30,10 @@ int init(App *app, const char* title)
         return EXIT_FAILURE;
     }
 
+    if (TTF_Init() != 0) {
+        fprintf(stderr, "TTF_Init Error: %s\n", TTF_GetError());
+    }
+
     return EXIT_SUCCESS;
 }
 

@@ -10,4 +10,5 @@ A template for bootstrapping SDL2 based games in the C17 (C18) standard.
 * [Template Examples](https://github.com/xyproto/sdl2-examples) (all languages)
 
 # Tutorials and Examples
+* [Lesson 07 - Text Rendering & Input](https://thenumbat.github.io/cpp-course/sdl2/07/07.html)
 * [Lesson 08 - Timing: Frame Rate, Physics, Animation](https://thenumbat.github.io/cpp-course/sdl2/08/08.html)
