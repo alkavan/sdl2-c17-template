@@ -9,7 +9,7 @@ void handle_input(App *app)
         switch (event.type)
         {
             case SDL_QUIT:
-                app->is_running = false;
+                app->running = false;
                 break;
             default:
                 break;
@@ -18,7 +18,7 @@ void handle_input(App *app)
         switch(event.key.keysym.sym)
         {
             case SDLK_ESCAPE:
-                app->is_running = false;
+                app->running = false;
                 break;
             default:
                 break;

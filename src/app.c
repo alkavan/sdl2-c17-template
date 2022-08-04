@@ -1,7 +1,22 @@
-#include "init.h"
-#include "config.h"
+#include "app.h"
 
-int init(App *app, const char* title)
+#include <SDL2/SDL_ttf.h>
+
+App *app_new() {
+    App *app = (App*) malloc(sizeof(App));
+
+    app->renderer = NULL;
+    app->window = NULL;
+    app->running = true;
+
+    return app;
+}
+
+void app_free(App *t) {
+    free(t);
+}
+
+int app_init(App *const app, const char* title, int32_t width, int32_t height)
 {
     int rendererFlags, windowFlags;
 
@@ -14,7 +29,13 @@ int init(App *app, const char* title)
         return EXIT_FAILURE;
     }
 
-    app->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
+    app->window = SDL_CreateWindow(title,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   width,
+                                   height,
+                                   windowFlags
+                                   );
     if (!app->window) {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
@@ -37,8 +58,9 @@ int init(App *app, const char* title)
     return EXIT_SUCCESS;
 }
 
-void quit(App *app) {
+void app_quit(App *app) {
     SDL_DestroyRenderer(app->renderer);
     SDL_DestroyWindow(app->window);
+    app_free(app);
     SDL_Quit();
 }

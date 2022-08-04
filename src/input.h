@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "types.h"
+#include "app.h"
 
 void handle_input(App *app);
 

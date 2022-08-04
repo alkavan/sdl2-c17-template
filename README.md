@@ -12,3 +12,4 @@ A template for bootstrapping SDL2 based games in the C17 (C18) standard.
 # Tutorials and Examples
 * [Lesson 07 - Text Rendering & Input](https://thenumbat.github.io/cpp-course/sdl2/07/07.html)
 * [Lesson 08 - Timing: Frame Rate, Physics, Animation](https://thenumbat.github.io/cpp-course/sdl2/08/08.html)
+* [SDL Tutorial - Capping Frame Rate](https://lazyfoo.net/tutorials/SDL/25_capping_frame_rate/index.php)

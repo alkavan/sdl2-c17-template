@@ -4,8 +4,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "types.h"
-
 void prepare_scene(SDL_Renderer *renderer);
 void present_scene(SDL_Renderer *renderer);
 

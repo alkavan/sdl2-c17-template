@@ -1,7 +1,9 @@
 #ifndef SDL2_C17_CONFIG_H
 #define SDL2_C17_CONFIG_H
 
-#define SCREEN_WIDTH   1280
-#define SCREEN_HEIGHT  720
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 #endif //SDL2_C17_CONFIG_H
