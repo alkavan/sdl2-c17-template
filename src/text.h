@@ -1,8 +1,8 @@
 #ifndef SDL2_C17_TEXT_H
 #define SDL2_C17_TEXT_H
 
-#include <SDL_surface.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
 
 struct Text {
     struct {

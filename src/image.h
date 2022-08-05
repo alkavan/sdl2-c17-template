@@ -1,8 +1,8 @@
 #ifndef SDL2_C17_IMAGE_H
 #define SDL2_C17_IMAGE_H
 
-#include <SDL_surface.h>
-#include <SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_render.h>
 
 struct Image {
     struct {

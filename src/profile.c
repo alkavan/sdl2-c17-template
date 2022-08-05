@@ -1,4 +1,4 @@
-#include <SDL_timer.h>
+#include <SDL2/SDL_timer.h>
 #include "profile.h"
 
 #define MAX_FPS_VALUE 2000000.0f

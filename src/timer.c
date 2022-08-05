@@ -1,4 +1,5 @@
-#include <SDL_timer.h>
+#include <SDL2/SDL_timer.h>
+
 #include "timer.h"
 
 static void start(Timer *const t) {

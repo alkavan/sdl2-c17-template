@@ -1,4 +1,4 @@
-#include <SDL_log.h>
+#include <SDL2/SDL_log.h>
 #include "image.h"
 
 static void update(Image *const t, int x, int y) {

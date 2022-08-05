@@ -2,7 +2,7 @@
 #define SDL2_C17_TIMER_H
 
 #include <stdbool.h>
-#include <SDL_types.h>
+#include <SDL2/SDL_types.h>
 
 /**
  * Implementing example: https://lazyfoo.net/tutorials/SDL/23_advanced_timers/index.php
