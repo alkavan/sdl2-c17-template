@@ -1,3 +1,5 @@
+#include <version_config.h>
+
 #include "config.h"
 #include "input.h"
 #include "draw.h"
@@ -14,10 +16,14 @@ typedef struct {
 
 int main()
 {
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "loading ... %s %s", PROJECT_NAME, PROJECT_VERSION);
+
+    // create application object
     App* app = app_new();
 
     // init game application
-    int init_code = app_init(app, "SDL2 C17 Example", SCREEN_WIDTH, SCREEN_HEIGHT);
+    int init_code = app_init(app, "SDL2 C17 Example", PROJECT_VERSION,
+                             SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // if application failed to load exit
     if(init_code != 0) {
@@ -54,11 +60,13 @@ int main()
     // render loop
     while (app->running)
     {
+        // start profile session
         profile->start(profile);
 
         // handle input
         handle_input(app);
 
+        // calculate current fps after handling input
         profile->update(profile);
 
         // update scene
@@ -81,6 +89,7 @@ int main()
         // present scene
         present_scene(app->renderer);
 
+        // finish profile session
         profile->end(profile);
 
         // if frame finished early

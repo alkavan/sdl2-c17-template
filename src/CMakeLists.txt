@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
 
-set(CMAKE_C_STANDARD 17)
-
 find_package(SDL2 REQUIRED CONFIG)
 
 add_executable(sdl2_c17

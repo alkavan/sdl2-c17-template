@@ -9,6 +9,8 @@ App *app_new() {
     app->window = NULL;
     app->running = true;
 
+    sprintf(app->window_title, "");
+
     return app;
 }
 
@@ -18,7 +20,7 @@ void app_free(App *t) {
     free(t);
 }
 
-int app_init(App *const app, const char* title, int32_t width, int32_t height)
+int app_init(App *const app, const char* title, const char* version, int32_t width, int32_t height)
 {
     int rendererFlags, windowFlags;
 
@@ -31,7 +33,10 @@ int app_init(App *const app, const char* title, int32_t width, int32_t height)
         return EXIT_FAILURE;
     }
 
-    app->window = SDL_CreateWindow(title,
+    // extract to format?
+    sprintf(app->window_title, "%s v%s", title, version);
+
+    app->window = SDL_CreateWindow(app->window_title,
                                    SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED,
                                    width,

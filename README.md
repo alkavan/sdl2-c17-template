@@ -1,6 +1,6 @@
 # SDL2 C17 Template
 
-A template for bootstrapping SDL2 based games in the C17 (C18) standard.
+A template for bootstrapping SDL2 based games in the C17 standard.
 
 ## Resources
 * [SDL2 Website](https://www.libsdl.org/)
