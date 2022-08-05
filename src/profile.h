@@ -9,18 +9,18 @@ struct Profile {
         void (*update)(struct Profile *const);
         void (*start)(struct Profile *const);
         void (*end)(struct Profile *const);
-        Uint32 (*getFrameTicks)(struct Profile *const);
+        Uint32 (*get_frame_ticks)(struct Profile *const);
     };
 
-    Timer* fpsTimer;
-    Timer* capTimer;
+    Timer* fps_timer;
+    Timer* cap_timer;
 
-    float currentFps;
-    Uint32 countedFrames;
-    bool isPerformance;
+    float current_fps;
+    Uint32 counted_frames;
+    bool is_performance;
 
-    Uint64 performanceStart;
-    Uint64 performanceCount;
+    Uint64 performance_start;
+    Uint64 performance_count;
 };
 
 typedef struct Profile Profile;

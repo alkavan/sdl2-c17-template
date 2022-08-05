@@ -70,10 +70,10 @@ int main()
         profile->update(profile);
 
         // update scene
-        sprintf(text_render.fps, "FPS: %.2f", profile->currentFps);
+        sprintf(text_render.fps, "FPS: %.2f", profile->current_fps);
         fps_text->update(fps_text, text_render.fps, font_color);
 
-        sprintf(text_render.pref, "Pref: %lu", profile->performanceCount);
+        sprintf(text_render.pref, "Pref: %lu", profile->performance_count);
         pref_text->update(pref_text, text_render.pref, font_color);
 
         // prepare and clear scene
@@ -93,7 +93,7 @@ int main()
         profile->end(profile);
 
         // if frame finished early
-        Uint32 frameTicks = profile->getFrameTicks(profile);
+        Uint32 frameTicks = profile->get_frame_ticks(profile);
         if(frameTicks < SCREEN_TICKS_PER_FRAME)
         {
             // wait remaining time

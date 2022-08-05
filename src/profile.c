@@ -4,37 +4,37 @@
 #define MAX_FPS_VALUE 2000000.0f
 
 static void init(struct Profile *const t) {
-    t->fpsTimer->start(t->fpsTimer);
-    t->countedFrames = 0;
+    t->fps_timer->start(t->fps_timer);
+    t->counted_frames = 0;
 }
 
 static void start(struct Profile *const t) {
-    t->capTimer->start(t->capTimer);
-    if(t->isPerformance) {
-        t->performanceStart = SDL_GetPerformanceCounter();
+    t->cap_timer->start(t->cap_timer);
+    if(t->is_performance) {
+        t->performance_start = SDL_GetPerformanceCounter();
     }
 }
 
 static void end(struct Profile *const t) {
-    ++t->countedFrames;
+    ++t->counted_frames;
 
-    if(t->isPerformance) {
-        t->performanceCount = SDL_GetPerformanceCounter() - t->performanceStart;
+    if(t->is_performance) {
+        t->performance_count = SDL_GetPerformanceCounter() - t->performance_start;
     }
 }
 
 static void update(struct Profile *const t) {
     // calculate and correct fps
-    t->currentFps = t->countedFrames / (t->fpsTimer->getTicks(t->fpsTimer) / 1000.f );
+    t->current_fps = t->counted_frames / (t->fps_timer->get_ticks(t->fps_timer) / 1000.f );
 
-    if(t->currentFps > MAX_FPS_VALUE)
+    if(t->current_fps > MAX_FPS_VALUE)
     {
-        t->currentFps = 0;
+        t->current_fps = 0;
     }
 }
 
-Uint32 getFrameTicks(struct Profile *const t) {
-    return t->capTimer->getTicks(t->capTimer);
+Uint32 get_frame_ticks(struct Profile *const t) {
+    return t->cap_timer->get_ticks(t->cap_timer);
 }
 
 Profile *profile_new(bool is_performance) {
@@ -44,21 +44,21 @@ Profile *profile_new(bool is_performance) {
     profile->start = &start;
     profile->end = &end;
     profile->update = &update;
-    profile->getFrameTicks = &getFrameTicks;
+    profile->get_frame_ticks = &get_frame_ticks;
 
     // frames per second timer
-    profile->fpsTimer = timer_new();
+    profile->fps_timer = timer_new();
 
     // frames per second cap timer
-    profile->capTimer = timer_new();
+    profile->cap_timer = timer_new();
 
     // some initial values
-    profile->currentFps = 0.0f;
-    profile->countedFrames = 0;
+    profile->current_fps = 0.0f;
+    profile->counted_frames = 0;
 
-    profile->isPerformance = is_performance;
-    profile->performanceStart = 0;
-    profile->performanceCount = 0;
+    profile->is_performance = is_performance;
+    profile->performance_start = 0;
+    profile->performance_count = 0;
 
     return profile;
 }

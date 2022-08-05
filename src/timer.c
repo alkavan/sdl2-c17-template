@@ -10,8 +10,8 @@ static void start(Timer *const t) {
     t->paused = false;
 
     // get the current clock time
-    t->startTicks = SDL_GetTicks();
-    t->pausedTicks = 0;
+    t->start_ticks = SDL_GetTicks();
+    t->paused_ticks = 0;
 }
 
 static void stop(Timer *const t) {
@@ -22,8 +22,8 @@ static void stop(Timer *const t) {
     t->paused = false;
 
     // clear tick variables
-    t->startTicks = 0;
-    t->pausedTicks = 0;
+    t->start_ticks = 0;
+    t->paused_ticks = 0;
 }
 
 static void pause(Timer *const t) {
@@ -34,8 +34,8 @@ static void pause(Timer *const t) {
         t->paused = true;
 
         // calculate the paused ticks
-        t->pausedTicks = SDL_GetTicks() - t->startTicks;
-        t->startTicks = 0;
+        t->paused_ticks = SDL_GetTicks() - t->start_ticks;
+        t->start_ticks = 0;
     }
 }
 
@@ -47,37 +47,37 @@ static void unpause(Timer *const t) {
         t->paused = false;
 
         // reset the starting ticks
-        t->startTicks = SDL_GetTicks() - t->pausedTicks;
+        t->start_ticks = SDL_GetTicks() - t->paused_ticks;
 
         // reset the paused ticks
-        t->pausedTicks = 0;
+        t->paused_ticks = 0;
     }
 }
 
-static Uint32 getTicks(Timer *const t) {
+static Uint32 get_ticks(Timer *const t) {
     // actual timer time
     Uint32 time = 0;
 
     // if the timer is running
-    if( t->started )
+    if(t->started)
     {
         // if the timer is paused
-        if( t->paused )
+        if(t->paused)
         {
             // return the number of ticks when the timer was paused
-            time = t->pausedTicks;
+            time = t->paused_ticks;
         }
         else
         {
             // return the current time minus the start time
-            time = SDL_GetTicks() - t->startTicks;
+            time = SDL_GetTicks() - t->start_ticks;
         }
     }
 
     return time;
 }
 
-static bool isStarted(Timer *const t) {
+static bool is_started(Timer *const t) {
     // timer is running and paused or unpaused
     return t->started;
 }
@@ -94,12 +94,12 @@ Timer *timer_new() {
     timer->stop = &stop;
     timer->pause = &pause;
     timer->unpause = &unpause;
-    timer->getTicks = &getTicks;
-    timer->isStarted = &isStarted;
-    timer->isPaused = &isPaused;
+    timer->get_ticks = &get_ticks;
+    timer->is_started = &is_started;
+    timer->is_paused = &isPaused;
 
-    timer->startTicks = 0;
-    timer->pausedTicks = 0;
+    timer->start_ticks = 0;
+    timer->paused_ticks = 0;
     timer->paused = false;
     timer->started = false;
 

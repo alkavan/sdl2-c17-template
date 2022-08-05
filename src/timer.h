@@ -14,16 +14,16 @@ struct Timer {
         void (*stop)(struct Timer *const);
         void (*pause)(struct Timer *const);
         void (*unpause)(struct Timer *const);
-        Uint32 (*getTicks)(struct Timer *const);
-        bool (*isStarted)(struct Timer *const);
-        bool (*isPaused)(struct Timer *const);
+        Uint32 (*get_ticks)(struct Timer *const);
+        bool (*is_started)(struct Timer *const);
+        bool (*is_paused)(struct Timer *const);
     };
 
     // clock time when the timer started
-    Uint32 startTicks;
+    Uint32 start_ticks;
 
     // ticks stored when the timer was paused
-    Uint32 pausedTicks;
+    Uint32 paused_ticks;
 
     // timer status
     bool paused;
