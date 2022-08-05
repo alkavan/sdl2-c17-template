@@ -13,6 +13,8 @@ App *app_new() {
 }
 
 void app_free(App *t) {
+    SDL_DestroyRenderer(t->renderer);
+    SDL_DestroyWindow(t->window);
     free(t);
 }
 
@@ -59,8 +61,6 @@ int app_init(App *const app, const char* title, int32_t width, int32_t height)
 }
 
 void app_quit(App *app) {
-    SDL_DestroyRenderer(app->renderer);
-    SDL_DestroyWindow(app->window);
     app_free(app);
     SDL_Quit();
 }

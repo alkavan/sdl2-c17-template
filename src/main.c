@@ -1,10 +1,15 @@
 #include "config.h"
 #include "input.h"
 #include "draw.h"
-#include "utility.h"
 #include "app.h"
 #include "timer.h"
 #include "profile.h"
+#include "text.h"
+
+typedef struct {
+    char fps[255];
+    char pref[255];
+} TextRender;
 
 int main()
 {
@@ -44,12 +49,11 @@ int main()
     }
     SDL_FreeSurface(bmp);
 
-    SDL_Surface* fps_text;
-    SDL_Surface* pref_text;
-    SDL_Color font_color = {255, 0, 0 };
+    Text* fps_text = text_new(10, 10, font);
+    Text* pref_text = text_new(10, 10+get_line_height(), font);
 
-    char fps_string[32];
-    char pref_string[32];
+    TextRender text_render = {"", ""};
+    SDL_Color font_color = {255, 0, 0 };
 
     // create profile object
     Profile* profile = profile_new(true);
@@ -68,11 +72,11 @@ int main()
         profile->update(profile);
 
         // update scene
-        sprintf(fps_string, "FPS: %.2f", profile->currentFps);
-        update_text(fps_string, &fps_text, font, font_color);
+        sprintf(text_render.fps, "FPS: %.2f", profile->currentFps);
+        fps_text->update(fps_text, text_render.fps, font_color);
 
-        sprintf(pref_string, "Pref: %lu", profile->performanceCount);
-        update_text(pref_string, &pref_text, font, font_color);
+        sprintf(text_render.pref, "Pref: %lu", profile->performanceCount);
+        pref_text->update(pref_text, text_render.pref, font_color);
 
         // prepare and clear scene
         prepare_scene(app->renderer);
@@ -80,8 +84,9 @@ int main()
         // draw to back-buffer
         SDL_RenderCopy(app->renderer, texture, NULL, NULL);
 
-        render_text(app->renderer, fps_text, 10, 10);
-        render_text(app->renderer, pref_text, 10, 10+get_line_height());
+        // render texts
+        fps_text->render(fps_text, app->renderer);
+        pref_text->render(pref_text, app->renderer);
 
         // present scene
         present_scene(app->renderer);
@@ -100,6 +105,8 @@ int main()
     // clean up
     SDL_DestroyTexture(texture);
     profile_free(profile);
+    text_free(fps_text);
+    text_free(pref_text);
     app_quit(app);
 
     return EXIT_SUCCESS;

@@ -11,14 +11,14 @@ add_executable(sdl2_c17
         input.h
         draw.c
         draw.h
-        utility.c
-        utility.h
         timer.c
         timer.h
         app.c
         app.h
         profile.c
         profile.h
+        text.c
+        text.h
         )
 
 target_link_libraries(sdl2_c17 SDL2::SDL2 SDL2_ttf)
