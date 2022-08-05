@@ -1,7 +1,7 @@
 #include <SDL_timer.h>
 #include "timer.h"
 
-void start(Timer *const t) {
+static void start(Timer *const t) {
     // start the timer
     t->started = true;
 
@@ -13,7 +13,7 @@ void start(Timer *const t) {
     t->pausedTicks = 0;
 }
 
-void stop(Timer *const t) {
+static void stop(Timer *const t) {
     // stop the timer
     t->started = false;
 
@@ -25,7 +25,7 @@ void stop(Timer *const t) {
     t->pausedTicks = 0;
 }
 
-void pause(Timer *const t) {
+static void pause(Timer *const t) {
     // if the timer is running and isn't already paused
     if( t->started && !t->paused )
     {
@@ -38,7 +38,7 @@ void pause(Timer *const t) {
     }
 }
 
-void unpause(Timer *const t) {
+static void unpause(Timer *const t) {
     // if the timer is running and paused
     if( t->started && t->paused )
     {
@@ -53,7 +53,7 @@ void unpause(Timer *const t) {
     }
 }
 
-Uint32 getTicks(Timer *const t) {
+static Uint32 getTicks(Timer *const t) {
     // actual timer time
     Uint32 time = 0;
 
@@ -76,12 +76,12 @@ Uint32 getTicks(Timer *const t) {
     return time;
 }
 
-bool isStarted(Timer *const t) {
+static bool isStarted(Timer *const t) {
     // timer is running and paused or unpaused
     return t->started;
 }
 
-bool isPaused(Timer *const t) {
+static bool isPaused(Timer *const t) {
     // timer is running and paused
     return t->paused && t->started;
 }

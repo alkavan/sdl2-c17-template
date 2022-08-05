@@ -7,6 +7,6 @@
 void prepare_scene(SDL_Renderer *renderer);
 void present_scene(SDL_Renderer *renderer);
 
-void render_text(SDL_Renderer *renderer, SDL_Surface *text);
+void render_text(SDL_Renderer *renderer, SDL_Surface *text, int x, int y);
 
 #endif //SDL2_C17_DRAW_H

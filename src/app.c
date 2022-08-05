@@ -25,7 +25,7 @@ int app_init(App *const app, const char* title, int32_t width, int32_t height)
     windowFlags = SDL_WINDOW_SHOWN;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init application (%s)", SDL_GetError());
         return EXIT_FAILURE;
     }
 
@@ -37,7 +37,7 @@ int app_init(App *const app, const char* title, int32_t width, int32_t height)
                                    windowFlags
                                    );
     if (!app->window) {
-        fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create window (%s)", SDL_GetError());
         return EXIT_FAILURE;
     }
 
@@ -45,14 +45,14 @@ int app_init(App *const app, const char* title, int32_t width, int32_t height)
 
     app->renderer = SDL_CreateRenderer(app->window, -1, rendererFlags);
     if (!app->renderer) {
-        fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create renderer (%s)", SDL_GetError());
         SDL_DestroyWindow(app->window);
         SDL_Quit();
         return EXIT_FAILURE;
     }
 
     if (TTF_Init() != 0) {
-        fprintf(stderr, "TTF_Init Error: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init font component (%s)", SDL_GetError());
     }
 
     return EXIT_SUCCESS;
