@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "profile.h"
 #include "text.h"
+#include "image.h"
 
 typedef struct {
     char fps[255];
@@ -18,6 +19,7 @@ int main()
     // init game application
     int init_code = app_init(app, "SDL2 C17 Example", SCREEN_WIDTH, SCREEN_HEIGHT);
 
+    // if application failed to load exit
     if(init_code != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create application (code: %d)", init_code);
         return init_code;
@@ -25,29 +27,17 @@ int main()
 
     // load font
     TTF_Font* font = TTF_OpenFont("../res/Ac437_ATI_8x8.ttf", FONT_DEFAULT_SIZE);
-    if (!font) {
+    if ( ! font) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create font (%s)", TTF_GetError());
         return EXIT_FAILURE;
     }
 
-    // load image
-    SDL_Surface* bmp = SDL_LoadBMP("../res/grumpy-cat.bmp");
-    if (bmp == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to load bitmap (%s)", SDL_GetError());
+    // load background image
+    Image* bg_image = image_new(0, 0, "../res/grumpy-cat.bmp");
+    if (bg_image == NULL) {
         app_quit(app);
         return EXIT_FAILURE;
     }
-
-    // create texture
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(app->renderer, bmp);
-    if (texture == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create texture (%s)", SDL_GetError());
-        SDL_FreeSurface(bmp);
-        app_quit(app);
-
-        return EXIT_FAILURE;
-    }
-    SDL_FreeSurface(bmp);
 
     Text* fps_text = text_new(10, 10, font);
     Text* pref_text = text_new(10, 10+get_line_height(), font);
@@ -81,8 +71,8 @@ int main()
         // prepare and clear scene
         prepare_scene(app->renderer);
 
-        // draw to back-buffer
-        SDL_RenderCopy(app->renderer, texture, NULL, NULL);
+        // render background image
+        bg_image->render(bg_image, app->renderer);
 
         // render texts
         fps_text->render(fps_text, app->renderer);
@@ -103,10 +93,10 @@ int main()
     }
 
     // clean up
-    SDL_DestroyTexture(texture);
     profile_free(profile);
     text_free(fps_text);
     text_free(pref_text);
+    image_free(bg_image);
     app_quit(app);
 
     return EXIT_SUCCESS;

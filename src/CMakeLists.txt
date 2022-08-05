@@ -19,6 +19,8 @@ add_executable(sdl2_c17
         profile.h
         text.c
         text.h
+        image.c
+        image.h
         )
 
 target_link_libraries(sdl2_c17 SDL2::SDL2 SDL2_ttf)
