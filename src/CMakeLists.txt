@@ -21,4 +21,4 @@ add_executable(sdl2_c17
         image.h
         )
 
-target_link_libraries(sdl2_c17 SDL2 SDL2_ttf)
+target_link_libraries(sdl2_c17 SDL2 SDL2_ttf SDL2_image)

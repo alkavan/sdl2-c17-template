@@ -39,7 +39,7 @@ int main()
     }
 
     // load background image
-    Image* bg_image = image_new(0, 0, "../res/grumpy-cat.bmp");
+    Image* bg_image = image_new(0, 0, "../res/galaxy-purple_1280x720.jpg", JPG_LOADER);
     if (bg_image == NULL) {
         app_quit(app);
         return EXIT_FAILURE;

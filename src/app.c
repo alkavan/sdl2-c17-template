@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 App *app_new() {
     App *app = (App*) malloc(sizeof(App));
@@ -60,6 +61,12 @@ int app_init(App *const app, const char* title, const char* version, int32_t wid
 
     if (TTF_Init() != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init font component (%s)", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+
+    if(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) != (IMG_INIT_JPG | IMG_INIT_PNG)) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init image component (%s)", IMG_GetError());
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
