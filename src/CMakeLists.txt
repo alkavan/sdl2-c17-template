@@ -17,6 +17,8 @@ add_executable(sdl2_c17
         timer.h
         app.c
         app.h
+        profile.c
+        profile.h
         )
 
 target_link_libraries(sdl2_c17 SDL2::SDL2 SDL2_ttf)
