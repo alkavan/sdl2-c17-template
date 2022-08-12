@@ -23,6 +23,8 @@ add_executable(sdl2_c17
         sprite.h
         utility.c
         utility.h
+        animation.c
+        animation.h
         )
 
 target_link_libraries(sdl2_c17 SDL2 SDL2_ttf SDL2_image m mathc)

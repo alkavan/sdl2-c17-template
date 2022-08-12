@@ -9,6 +9,7 @@
 #include "text.h"
 #include "image.h"
 #include "sprite.h"
+#include "animation.h"
 #include "utility.h"
 
 typedef struct {
@@ -60,11 +61,15 @@ int main()
     }
 
     // create ship sprite
-    Sprite* sprite_ship = sprite_new(SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, 32, 32, surface_ship);
+    Sprite* ship_sprite = sprite_new(SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, 32, 32, surface_ship);
 
     // create solid tileset sprite
-    Sprite* sprite_solid_tiles = sprite_new(
+    Sprite* solid_tiles_sprite = sprite_new(
             SCREEN_HALF_WIDTH-100, SCREEN_HALF_HEIGHT-100, 16, 16, surface_solid_tiles);
+
+    // animations
+    Animation* ship_animation = animation_new(25, true);
+    Animation* tiles_animation = animation_new(100, true);
 
     // create text objects
     Text* fps_text = text_new(10, 10, font);
@@ -78,6 +83,9 @@ int main()
 
     // initialize profiler and start fps timer
     profile->init(profile);
+
+    ship_animation->start(ship_animation);
+    tiles_animation->start(tiles_animation);
 
     // render loop
     while (app->running)
@@ -104,12 +112,12 @@ int main()
         // render background image
         img_background->render(img_background, app->renderer);
 
-        // render sprites
-        sprite_ship->render(sprite_ship, app->renderer);
-        sprite_ship->next(sprite_ship);
+        // render sprites and handle animations
+        ship_sprite->render(ship_sprite, app->renderer);
+        ship_animation->sprite(ship_animation, ship_sprite);
 
-        sprite_solid_tiles->render(sprite_solid_tiles, app->renderer);
-        sprite_solid_tiles->next(sprite_solid_tiles);
+        solid_tiles_sprite->render(solid_tiles_sprite, app->renderer);
+        tiles_animation->sprite(tiles_animation, solid_tiles_sprite);
 
         // render texts
         fps_text->render(fps_text, app->renderer);
@@ -135,8 +143,11 @@ int main()
     profile_free(profile);
     text_free(fps_text);
     text_free(pref_text);
+    animation_free(ship_animation);
+    animation_free(tiles_animation);
+    sprite_free(ship_sprite);
+    sprite_free(solid_tiles_sprite);
     image_free(img_background);
-    sprite_free(sprite_ship);
     app_quit(app);
 
     return EXIT_SUCCESS;
