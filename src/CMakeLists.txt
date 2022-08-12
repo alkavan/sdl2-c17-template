@@ -25,6 +25,8 @@ add_executable(sdl2_c17
         utility.h
         animation.c
         animation.h
+        context.c
+        context.h
         )
 
 target_link_libraries(sdl2_c17 SDL2 SDL2_ttf SDL2_image m mathc)

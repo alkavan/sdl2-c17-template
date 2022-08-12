@@ -82,7 +82,7 @@ static bool is_started(Timer *const t) {
     return t->started;
 }
 
-static bool isPaused(Timer *const t) {
+static bool is_paused(Timer *const t) {
     // timer is running and paused
     return t->paused && t->started;
 }
@@ -96,7 +96,7 @@ Timer *timer_new() {
     timer->unpause = &unpause;
     timer->get_ticks = &get_ticks;
     timer->is_started = &is_started;
-    timer->is_paused = &isPaused;
+    timer->is_paused = &is_paused;
 
     timer->start_ticks = 0;
     timer->paused_ticks = 0;

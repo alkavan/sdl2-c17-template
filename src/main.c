@@ -1,6 +1,7 @@
 #include <version_config.h>
 
 #include "config.h"
+#include "context.h"
 #include "input.h"
 #include "draw.h"
 #include "app.h"
@@ -11,11 +12,6 @@
 #include "sprite.h"
 #include "animation.h"
 #include "utility.h"
-
-typedef struct {
-    char fps[255];
-    char pref[255];
-} TextRender;
 
 int main()
 {
@@ -74,9 +70,19 @@ int main()
     // create text objects
     Text* fps_text = text_new(10, 10, font);
     Text* pref_text = text_new(10, 10+get_line_height(), font);
+    Text* help_text = text_new(10, SCREEN_HEIGHT-get_line_height()-10, font);
 
-    TextRender text_render = {"", ""};
-    SDL_Color font_color = {255, 0, 0 };
+    TextRenderContext text_render_context = {
+            .fps="",
+            .pref="",
+            .help="use AWSD keys to move ship, F5/F6 to start/stop animation, ESC to quit!"
+    };
+
+    SDL_Color color_red = {255, 0, 0 };
+    SDL_Color color_white = {255, 255, 255 };
+
+    // initialize context objects
+    GameInputContext input_context = (GameInputContext){ship_sprite, ship_animation};
 
     // create profile object
     Profile* profile = profile_new(true);
@@ -94,17 +100,19 @@ int main()
         profile->start(profile);
 
         // handle input
-        handle_input(app);
+        handle_input(app, &input_context);
 
         // calculate current fps after handling input
         profile->update(profile);
 
         // update scene
-        sprintf(text_render.fps, "FPS: %.2f", profile->current_fps);
-        fps_text->update(fps_text, text_render.fps, font_color);
+        sprintf(text_render_context.fps, "FPS: %.2f", profile->current_fps);
+        fps_text->update(fps_text, text_render_context.fps, color_red);
 
-        sprintf(text_render.pref, "Pref: %lu", profile->performance_count);
-        pref_text->update(pref_text, text_render.pref, font_color);
+        sprintf(text_render_context.pref, "Pref: %lu", profile->performance_count);
+        pref_text->update(pref_text, text_render_context.pref, color_red);
+
+        help_text->update(help_text, text_render_context.help, color_white);
 
         // prepare and clear scene
         prepare_scene(app->renderer);
@@ -122,7 +130,7 @@ int main()
         // render texts
         fps_text->render(fps_text, app->renderer);
         pref_text->render(pref_text, app->renderer);
-
+        help_text->render(help_text, app->renderer);
 
         // present scene
         present_scene(app->renderer);

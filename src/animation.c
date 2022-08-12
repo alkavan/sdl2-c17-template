@@ -1,6 +1,10 @@
 #include "animation.h"
 
 static void sprite(Animation *const t, Sprite *const sprite) {
+    if( ! t->timer->started) {
+        return;
+    }
+
     Uint32 now_tick = t->timer->get_ticks(t->timer);
     if((now_tick - t->last_frame_tick) < t->frame_rate_ms) {
         return;
@@ -14,6 +18,8 @@ void start(struct Animation *const t) {
     if( ! t->timer->started) {
         t->timer->start(t->timer);
     }
+
+    t->last_frame_tick = 0;
 }
 
 void stop(struct Animation *const t) {
