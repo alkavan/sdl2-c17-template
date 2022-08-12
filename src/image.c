@@ -1,5 +1,4 @@
 #include <SDL2/SDL_log.h>
-#include <SDL2/SDL_image.h>
 #include "image.h"
 
 static void update(Image *const t, int x, int y) {
@@ -19,7 +18,7 @@ static void render(Image *const t, SDL_Renderer *renderer) {
     SDL_RenderCopy(renderer, t->texture, NULL, NULL);
 }
 
-Image *image_new(int x, int y, const char* filename, ImageLoader loader) {
+Image *image_new(int x, int y, SDL_Surface *const surface) {
     Image *image = (Image*) malloc(sizeof(Image));
 
     image->update = &update;
@@ -28,27 +27,12 @@ Image *image_new(int x, int y, const char* filename, ImageLoader loader) {
     SDL_Point position = {x, y};
     image->position = position;
 
-    switch (loader) {
-        case PNG_LOADER: {
-            image->surface = IMG_Load(filename);
-            break;
-        }
-        case JPG_LOADER: {
-            image->surface = IMG_Load(filename);
-            break;
-        }
-        case BMP_LOADER: {
-            image->surface = SDL_LoadBMP(filename);
-            break;
-        }
-    }
-
-
-
-    if (image->surface == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to load bitmap (%s)", SDL_GetError());
+    if (surface == NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "null surface, unable to create Image{}");
         return NULL;
     }
+    image->surface = surface;
+    image->texture = NULL;
 
     return image;
 }

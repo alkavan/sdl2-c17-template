@@ -19,6 +19,10 @@ add_executable(sdl2_c17
         text.h
         image.c
         image.h
+        sprite.c
+        sprite.h
+        utility.c
+        utility.h
         )
 
-target_link_libraries(sdl2_c17 SDL2 SDL2_ttf SDL2_image)
+target_link_libraries(sdl2_c17 SDL2 SDL2_ttf SDL2_image m mathc)

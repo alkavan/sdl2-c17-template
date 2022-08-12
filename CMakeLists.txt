@@ -3,11 +3,21 @@ cmake_minimum_required(VERSION 3.21)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 17)
 
+# project, languages, and version
 project(sdl2_c17 LANGUAGES C VERSION 0.1.3)
 
+# generated code
 configure_file(version_config.h.in ${CMAKE_BINARY_DIR}/generated/version_config.h)
 include_directories(${CMAKE_BINARY_DIR}/generated/)
 
+# mathc library
+add_library(mathc
+        third_party/mathc/mathc.h
+        third_party/mathc/mathc.c
+        )
+include_directories(sdl2_c17 third_party/mathc)
+
+# project files
 add_subdirectory(src)
 
 # copy mandatory assets

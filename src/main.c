@@ -8,6 +8,8 @@
 #include "profile.h"
 #include "text.h"
 #include "image.h"
+#include "sprite.h"
+#include "utility.h"
 
 typedef struct {
     char fps[255];
@@ -39,12 +41,24 @@ int main()
     }
 
     // load background image
-    Image* bg_image = image_new(0, 0, "../res/galaxy-purple_1280x720.jpg", JPG_LOADER);
-    if (bg_image == NULL) {
+    SDL_Surface *surface_bg = NULL;
+    load_image(&surface_bg, "../res/galaxy-purple_1280x720.jpg");
+
+    // load ship sprite image
+    SDL_Surface *surface_ship = NULL;
+    load_image(&surface_ship, "../res/ship1.png");
+
+    // create background image
+    Image* img_background = image_new(0, 0, surface_bg);
+    if (img_background == NULL) {
         app_quit(app);
         return EXIT_FAILURE;
     }
 
+    // create ship sprite
+    Sprite* sprite_ship = sprite_new(SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, 32, 32, surface_ship);
+
+    // create text objects
     Text* fps_text = text_new(10, 10, font);
     Text* pref_text = text_new(10, 10+get_line_height(), font);
 
@@ -80,11 +94,16 @@ int main()
         prepare_scene(app->renderer);
 
         // render background image
-        bg_image->render(bg_image, app->renderer);
+        img_background->render(img_background, app->renderer);
+
+        // render sprites
+        sprite_ship->render(sprite_ship, app->renderer);
+        sprite_ship->next(sprite_ship);
 
         // render texts
         fps_text->render(fps_text, app->renderer);
         pref_text->render(pref_text, app->renderer);
+
 
         // present scene
         present_scene(app->renderer);
@@ -105,7 +124,8 @@ int main()
     profile_free(profile);
     text_free(fps_text);
     text_free(pref_text);
-    image_free(bg_image);
+    image_free(img_background);
+    sprite_free(sprite_ship);
     app_quit(app);
 
     return EXIT_SUCCESS;
