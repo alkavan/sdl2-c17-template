@@ -48,6 +48,10 @@ int main()
     SDL_Surface *surface_ship = NULL;
     load_image(&surface_ship, "../res/ship1.png");
 
+    // load solid tiles image
+    SDL_Surface *surface_solid_tiles = NULL;
+    load_bitmap(&surface_solid_tiles, "../res/solid-tileset.bmp");
+
     // create background image
     Image* img_background = image_new(0, 0, surface_bg);
     if (img_background == NULL) {
@@ -57,6 +61,10 @@ int main()
 
     // create ship sprite
     Sprite* sprite_ship = sprite_new(SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, 32, 32, surface_ship);
+
+    // create solid tileset sprite
+    Sprite* sprite_solid_tiles = sprite_new(
+            SCREEN_HALF_WIDTH-100, SCREEN_HALF_HEIGHT-100, 16, 16, surface_solid_tiles);
 
     // create text objects
     Text* fps_text = text_new(10, 10, font);
@@ -99,6 +107,9 @@ int main()
         // render sprites
         sprite_ship->render(sprite_ship, app->renderer);
         sprite_ship->next(sprite_ship);
+
+        sprite_solid_tiles->render(sprite_solid_tiles, app->renderer);
+        sprite_solid_tiles->next(sprite_solid_tiles);
 
         // render texts
         fps_text->render(fps_text, app->renderer);
