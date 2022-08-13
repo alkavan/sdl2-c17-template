@@ -1,4 +1,5 @@
 #include "input.h"
+#include "types.h"
 
 void handle_input(App *app, GameInputContext *context)
 {
@@ -27,28 +28,19 @@ void handle_input(App *app, GameInputContext *context)
                 context->ship_animation->stop(context->ship_animation);
                 break;
             case SDLK_a: {
-                int x = context->ship_sprite->position.x;
-                int y = context->ship_sprite->position.y;
-                context->ship_sprite->update(context->ship_sprite, x-1, y);
+                context->ship_sprite->object->translate(context->ship_sprite->object, (Vec2){-1, 0});
                 break;
             }
-
             case SDLK_w: {
-                int x = context->ship_sprite->position.x;
-                int y = context->ship_sprite->position.y;
-                context->ship_sprite->update(context->ship_sprite, x, y-1);
+                context->ship_sprite->object->translate(context->ship_sprite->object, (Vec2){0, -1});
                 break;
             }
             case SDLK_s: {
-                int x = context->ship_sprite->position.x;
-                int y = context->ship_sprite->position.y;
-                context->ship_sprite->update(context->ship_sprite, x, y+1);
+                context->ship_sprite->object->translate(context->ship_sprite->object, (Vec2){0, 1});
                 break;
             }
             case SDLK_d: {
-                int x = context->ship_sprite->position.x;
-                int y = context->ship_sprite->position.y;
-                context->ship_sprite->update(context->ship_sprite, x+1, y);
+                context->ship_sprite->object->translate(context->ship_sprite->object, (Vec2){1, 0});
                 break;
             }
             default:

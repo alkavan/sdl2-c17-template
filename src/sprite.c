@@ -1,4 +1,5 @@
 #include <SDL2/SDL_log.h>
+#include "types.h"
 #include "sprite.h"
 #include "utility.h"
 
@@ -10,7 +11,7 @@
  * @param grid
  * @return
  */
-static struct vec2i get_grid_xy(int frame_index, struct vec2i frame_size, struct vec2i grid) {
+static struct vec2i get_grid_xy(int frame_index, Vec2i frame_size, Vec2i grid) {
 
     int row = floor((double)frame_index / grid.x);
     int col = frame_index - (grid.x * row);
@@ -18,12 +19,39 @@ static struct vec2i get_grid_xy(int frame_index, struct vec2i frame_size, struct
     int frame_x = frame_size.x * col;
     int frame_y = frame_size.y * row;
 
-    return (struct vec2i) {frame_x, frame_y};
+    return (Vec2i) {frame_x, frame_y};
 }
 
-static void update(Sprite *const t, int x, int y) {
-    t->position.x = x;
-    t->position.y = y;
+static void update(Sprite *const t) {
+
+}
+
+static void render(Sprite *const t, SDL_Renderer *renderer) {
+    if( ! t->texture) {
+        t->texture = SDL_CreateTextureFromSurface(renderer, t->surface);
+        if (t->texture == NULL) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create texture (%s)", SDL_GetError());
+            return;
+        }
+    }
+
+    const Vec2i grid_xy = get_grid_xy(t->frame_index, t->frame_size, t->grid);
+
+    const SDL_Rect src_rect = {
+            grid_xy.x,
+            grid_xy.y,
+            t->frame_size.x,
+            t->frame_size.y
+    };
+
+    const SDL_Rect dest_rect = {
+            (int)t->object->position.x,
+            (int)t->object->position.y,
+            t->frame_size.x,
+            t->frame_size.y
+    };
+
+    SDL_RenderCopy(renderer, t->texture, &src_rect, &dest_rect);
 }
 
 static void next(Sprite *const t) {
@@ -37,68 +65,44 @@ static void next(Sprite *const t) {
     t->frame_index++;
 }
 
-static void render(Sprite *const t, SDL_Renderer *renderer) {
-    if( ! t->texture) {
-        t->texture = SDL_CreateTextureFromSurface(renderer, t->surface);
-        if (t->texture == NULL) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to create texture (%s)", SDL_GetError());
-            return;
-        }
-    }
-
-    const struct vec2i grid_xy = get_grid_xy(t->frame_index, t->frame_size, t->grid);
-
-    const SDL_Rect src_rect = {
-            grid_xy.x,
-            grid_xy.y,
-            t->frame_size.x,
-            t->frame_size.y
-    };
-
-    const SDL_Rect dest_rect = {
-            t->position.x,
-            t->position.y,
-            t->frame_size.x,
-            t->frame_size.y
-    };
-
-    SDL_RenderCopy(renderer, t->texture, &src_rect, &dest_rect);
-}
-
-Sprite *sprite_new(int x, int y, int w, int h, SDL_Surface *const surface) {
+Sprite *sprite_new(Vec2 position, Vec2i frame_size, SDL_Surface *const surface) {
     Sprite *sprite = (Sprite*) malloc(sizeof(Sprite));
 
     sprite->update = &update;
     sprite->render = &render;
     sprite->next = &next;
 
-    SDL_Point position = {x, y};
-    sprite->position = position;
+    Object* object = object_new();
+    object->set_position(object, position);
+    sprite->object = object;
 
-    sprite->frame_size.x = w;
-    sprite->frame_size.y = h;
+    sprite->frame_size.x = frame_size.x;
+    sprite->frame_size.y = frame_size.y;
+
+    int frame_w = frame_size.x;
+    int frame_h = frame_size.y;
 
     if (surface == NULL) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "null surface, unable to create Sprite{}");
         return NULL;
     }
 
-    if(is_fraction((double)surface->w / (double)w)) {
+    if(is_fraction((double)surface->w / (double)frame_w)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                      "%d surface does not divide by width %d",
-                     surface->w, w);
+                     surface->w, frame_w);
         return NULL;
     } else {
-        sprite->grid.x = surface->w / w;
+        sprite->grid.x = surface->w / frame_w;
     }
 
-    if(is_fraction((double)surface->h / (double)h)) {
+    if(is_fraction((double)surface->h / (double)frame_h)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                      "%d surface does not divide by height %d",
-                     surface->h, h);
+                     surface->h, frame_h);
         return NULL;
     } else {
-        sprite->grid.y = surface->h / h;
+        sprite->grid.y = surface->h / frame_h;
     }
 
     sprite->surface = surface;

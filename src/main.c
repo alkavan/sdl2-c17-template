@@ -50,18 +50,25 @@ int main()
     load_bitmap(&surface_solid_tiles, "../res/solid-tileset.bmp");
 
     // create background image
-    Image* img_background = image_new(0, 0, surface_bg);
+    Image* img_background = image_new((Vec2){0.0f, 0.0f}, surface_bg);
     if (img_background == NULL) {
         app_quit(app);
         return EXIT_FAILURE;
     }
 
     // create ship sprite
-    Sprite* ship_sprite = sprite_new(SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, 32, 32, surface_ship);
+    Sprite* ship_sprite = sprite_new(
+            (Vec2){(float)SCREEN_HALF_WIDTH, (float)SCREEN_HALF_HEIGHT},
+            (Vec2i){32, 32},
+            surface_ship
+            );
 
     // create solid tileset sprite
     Sprite* solid_tiles_sprite = sprite_new(
-            SCREEN_HALF_WIDTH-100, SCREEN_HALF_HEIGHT-100, 16, 16, surface_solid_tiles);
+            (Vec2){(float)SCREEN_HALF_WIDTH-100, (float)SCREEN_HALF_HEIGHT-100},
+            (Vec2i){16, 16},
+            surface_solid_tiles
+            );
 
     // animations
     Animation* ship_animation = animation_new(25, true);
