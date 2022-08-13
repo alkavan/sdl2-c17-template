@@ -22,7 +22,7 @@ static struct vec2i get_grid_xy(int frame_index, Vec2i frame_size, Vec2i grid) {
     return (Vec2i) {frame_x, frame_y};
 }
 
-static void update(Sprite *const t) {
+static void update(Sprite *const t, float dt) {
 
 }
 
@@ -44,14 +44,16 @@ static void render(Sprite *const t, SDL_Renderer *renderer) {
             t->frame_size.y
     };
 
-    const SDL_Rect dest_rect = {
-            (int)t->object->position.x,
-            (int)t->object->position.y,
-            t->frame_size.x,
-            t->frame_size.y
+    Vec2 offset = {(float)t->frame_size.x/2.f, (float)t->frame_size.y/2.f};
+
+    const SDL_FRect dest_rect = {
+            (t->object->position.x - offset.x),
+            (t->object->position.y - offset.y),
+            (float)t->frame_size.x,
+            (float)t->frame_size.y
     };
 
-    SDL_RenderCopy(renderer, t->texture, &src_rect, &dest_rect);
+    SDL_RenderCopyF(renderer, t->texture, &src_rect, &dest_rect);
 }
 
 static void next(Sprite *const t) {

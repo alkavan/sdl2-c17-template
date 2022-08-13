@@ -1,7 +1,7 @@
 #include <SDL2/SDL_log.h>
 #include "image.h"
 
-static void update(Image *const t) {
+static void update(Image *const t, float dt) {
 
 }
 
@@ -14,14 +14,16 @@ static void render(Image *const t, SDL_Renderer *renderer) {
         }
     }
 
-    const SDL_Rect dest_rect = {
-            (int)t->object->position.x,
-            (int)t->object->position.y,
-            t->surface->w,
-            t->surface->h
+    Vec2 offset = {(float)t->surface->w/2.f, (float)t->surface->h/2.f};
+
+    const SDL_FRect dest_rect = {
+            (t->object->position.x - offset.x),
+            (t->object->position.y - offset.y),
+            (float)t->surface->w,
+            (float)t->surface->h
     };
 
-    SDL_RenderCopy(renderer, t->texture, NULL, &dest_rect);
+    SDL_RenderCopyF(renderer, t->texture, NULL, &dest_rect);
 }
 
 Image *image_new(Vec2 position, SDL_Surface *const surface) {

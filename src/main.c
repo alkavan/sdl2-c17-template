@@ -50,8 +50,12 @@ int main()
     load_bitmap(&surface_solid_tiles, "../res/solid-tileset.bmp");
 
     // create background image
-    Image* img_background = image_new((Vec2){0.0f, 0.0f}, surface_bg);
-    if (img_background == NULL) {
+    Image* bg_image = image_new(
+            (Vec2){(float)SCREEN_HALF_WIDTH, (float)SCREEN_HALF_HEIGHT},
+            surface_bg
+            );
+
+    if (bg_image == NULL) {
         app_quit(app);
         return EXIT_FAILURE;
     }
@@ -75,21 +79,26 @@ int main()
     Animation* tiles_animation = animation_new(100, true);
 
     // create text objects
-    Text* fps_text = text_new(10, 10, font);
-    Text* pref_text = text_new(10, 10+get_line_height(), font);
-    Text* help_text = text_new(10, SCREEN_HEIGHT-get_line_height()-10, font);
+    Text* fps_text = text_new(16, 16, font);
+    Text* pref_text = text_new(16, 16+get_line_height(), font);
+    Text* mouse_text = text_new(16, 16+(get_line_height()*2), font);
+    Text* help_text = text_new(16, SCREEN_HEIGHT-get_line_height()-10, font);
 
     TextRenderContext text_render_context = {
             .fps="",
             .pref="",
-            .help="use AWSD keys to move ship, F5/F6 to start/stop animation, ESC to quit!"
+            .mouse="mouse (0, 0)",
+            .help="use AWSD keys to move ship, F5/F6 to start/stop animation, F7/F8 toggle grid/cross, ESC to quit!"
     };
 
-    SDL_Color color_red = {255, 0, 0 };
-    SDL_Color color_white = {255, 255, 255 };
-
     // initialize context objects
-    GameInputContext input_context = (GameInputContext){ship_sprite, ship_animation};
+    GameInputContext input_context = (GameInputContext){
+        ship_sprite,
+        ship_animation,
+        {0, 0},
+        true,
+        true
+    };
 
     // create profile object
     Profile* profile = profile_new(true);
@@ -113,19 +122,32 @@ int main()
         profile->update(profile);
 
         // update scene
-        sprintf(text_render_context.fps, "FPS: %.2f", profile->current_fps);
-        fps_text->update(fps_text, text_render_context.fps, color_red);
+        sprintf(text_render_context.fps, "fps: %.2f", profile->current_fps);
+        fps_text->update(fps_text, text_render_context.fps, COLOR_RED);
 
-        sprintf(text_render_context.pref, "Pref: %lu", profile->performance_count);
-        pref_text->update(pref_text, text_render_context.pref, color_red);
+        sprintf(text_render_context.pref, "pref: %lu", profile->performance_count);
+        pref_text->update(pref_text, text_render_context.pref, COLOR_RED);
 
-        help_text->update(help_text, text_render_context.help, color_white);
+        sprintf(text_render_context.mouse, "mouse (%d, %d)",
+                input_context.mouse_position.x, input_context.mouse_position.y);
+        mouse_text->update(mouse_text, text_render_context.mouse, COLOR_RED);
+
+        help_text->update(help_text, text_render_context.help, COLOR_WHITE);
 
         // prepare and clear scene
         prepare_scene(app->renderer);
 
         // render background image
-        img_background->render(img_background, app->renderer);
+        bg_image->render(bg_image, app->renderer);
+
+        // render global debug elements
+        if(input_context.show_debug_grid) {
+            draw_debug_grid(app->renderer, (Vec2i){16, 16}, COLOR_BLUE);
+        }
+
+        if(input_context.show_debug_cross) {
+            draw_debug_cross(app->renderer, COLOR_RED);
+        }
 
         // render sprites and handle animations
         ship_sprite->render(ship_sprite, app->renderer);
@@ -137,6 +159,7 @@ int main()
         // render texts
         fps_text->render(fps_text, app->renderer);
         pref_text->render(pref_text, app->renderer);
+        mouse_text->render(mouse_text, app->renderer);
         help_text->render(help_text, app->renderer);
 
         // present scene
@@ -162,7 +185,7 @@ int main()
     animation_free(tiles_animation);
     sprite_free(ship_sprite);
     sprite_free(solid_tiles_sprite);
-    image_free(img_background);
+    image_free(bg_image);
     app_quit(app);
 
     return EXIT_SUCCESS;

@@ -7,7 +7,7 @@
 
 struct Image {
     struct {
-        void (*update)(struct Image *const);
+        void (*update)(struct Image *const, float dt);
         void (*render)(struct Image *const, SDL_Renderer *renderer);
     };
 

@@ -27,7 +27,7 @@ int app_init(App *const app, const char* title, const char* version, int32_t wid
 
     rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
-    windowFlags = SDL_WINDOW_SHOWN;
+    windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_CAPTURE;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init application (%s)", SDL_GetError());
@@ -68,6 +68,9 @@ int app_init(App *const app, const char* title, const char* version, int32_t wid
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "failed to init image component (%s)", IMG_GetError());
         return EXIT_FAILURE;
     }
+
+    // enable global mouse capture
+//    SDL_CaptureMouse(SDL_TRUE);
 
     return EXIT_SUCCESS;
 }
