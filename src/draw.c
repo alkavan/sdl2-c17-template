@@ -12,6 +12,10 @@ void present_scene(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
+void draw_debug_line(SDL_Renderer *renderer, SDL_Color color, Vec2 p1, Vec2 p2) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLineF(renderer, p1.x, p1.y, p2.x, p2.y);
+}
 
 void draw_debug_cross(SDL_Renderer *renderer, SDL_Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
@@ -19,7 +23,7 @@ void draw_debug_cross(SDL_Renderer *renderer, SDL_Color color) {
     SDL_RenderDrawLine(renderer, SCREEN_HALF_WIDTH, 0, SCREEN_HALF_WIDTH, SCREEN_HEIGHT);
 }
 
-void draw_debug_grid(SDL_Renderer *renderer, Vec2i size, SDL_Color color) {
+void draw_debug_grid(SDL_Renderer *renderer, SDL_Color color, Vec2i size) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
     int gx = SCREEN_WIDTH / size.x;

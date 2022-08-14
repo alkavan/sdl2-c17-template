@@ -166,12 +166,15 @@ int main()
 
         // render global debug elements
         if(input_context.show_debug_grid) {
-            draw_debug_grid(app->renderer, (Vec2i){16, 16}, COLOR_BLUE);
+            draw_debug_grid(app->renderer, COLOR_BLUE, (Vec2i){16, 16});
         }
 
         if(input_context.show_debug_cross) {
             draw_debug_cross(app->renderer, COLOR_RED);
         }
+
+        Vec2 mv = (Vec2){(float)input_context.mouse_position.x, (float)input_context.mouse_position.y};
+        draw_debug_line(app->renderer, COLOR_GREEN, mv, ship_sprite->object->position);
 
         // render sprites and handle animations
         ship_sprite->render(ship_sprite, app->renderer);
