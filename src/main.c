@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "animation.h"
 #include "utility.h"
+#include "control.h"
 
 int main()
 {
@@ -82,19 +83,25 @@ int main()
     Text* fps_text = text_new(16, 16, font);
     Text* pref_text = text_new(16, 16+get_line_height(), font);
     Text* mouse_text = text_new(16, 16+(get_line_height()*2), font);
+    Text* ship_text = text_new(16, 16+(get_line_height()*3), font);
     Text* help_text = text_new(16, SCREEN_HEIGHT-get_line_height()-10, font);
 
     TextRenderContext text_render_context = {
             .fps="",
             .pref="",
             .mouse="mouse (0, 0)",
+            .ship="ship (0, 0)",
             .help="use AWSD keys to move ship, F5/F6 to start/stop animation, F7/F8 toggle grid/cross, ESC to quit!"
     };
+
+    // player control
+    Control* ship_control = control_new(1000.0f, 500.0f);
 
     // initialize context objects
     GameInputContext input_context = (GameInputContext){
         ship_sprite,
         ship_animation,
+        ship_control,
         {0, 0},
         true,
         true
@@ -109,29 +116,46 @@ int main()
     ship_animation->start(ship_animation);
     tiles_animation->start(tiles_animation);
 
+    float dt;
+
     // render loop
     while (app->running)
     {
         // start profile session
         profile->start(profile);
 
+        // update delta time (if fps is not zero)
+        if(profile->current_fps > 0) {
+            dt = 1.0f / profile->current_fps;
+        }
+
         // handle input
-        handle_input(app, &input_context);
+        handle_input(app, &input_context, dt);
 
         // calculate current fps after handling input
         profile->update(profile);
 
-        // update scene
+        ship_control->update(ship_control, dt, ship_sprite->object);
+
+        // fps text
         sprintf(text_render_context.fps, "fps: %.2f", profile->current_fps);
         fps_text->update(fps_text, text_render_context.fps, COLOR_RED);
 
-        sprintf(text_render_context.pref, "pref: %lu", profile->performance_count);
+        // delta time text
+        sprintf(text_render_context.pref, "dt: %f", dt);
         pref_text->update(pref_text, text_render_context.pref, COLOR_RED);
 
+        // mouse text
         sprintf(text_render_context.mouse, "mouse (%d, %d)",
                 input_context.mouse_position.x, input_context.mouse_position.y);
         mouse_text->update(mouse_text, text_render_context.mouse, COLOR_RED);
 
+        // ship text
+        sprintf(text_render_context.ship, "ship (%f, %f)",
+                ship_sprite->object->position.x, ship_sprite->object->position.y);
+        ship_text->update(ship_text, text_render_context.ship, COLOR_RED);
+
+        // help text
         help_text->update(help_text, text_render_context.help, COLOR_WHITE);
 
         // prepare and clear scene
@@ -160,6 +184,7 @@ int main()
         fps_text->render(fps_text, app->renderer);
         pref_text->render(pref_text, app->renderer);
         mouse_text->render(mouse_text, app->renderer);
+        ship_text->render(ship_text, app->renderer);
         help_text->render(help_text, app->renderer);
 
         // present scene
@@ -169,16 +194,17 @@ int main()
         profile->end(profile);
 
         // if frame finished early
-        Uint32 frameTicks = profile->get_frame_ticks(profile);
-        if(frameTicks < SCREEN_TICKS_PER_FRAME)
+        Uint32 frame_ticks = profile->get_frame_ticks(profile);
+        if(frame_ticks < SCREEN_TICKS_PER_FRAME)
         {
             // wait remaining time
-            SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+            SDL_Delay(SCREEN_TICKS_PER_FRAME - frame_ticks);
         }
     }
 
     // clean up
     profile_free(profile);
+    control_free(ship_control);
     text_free(fps_text);
     text_free(pref_text);
     animation_free(ship_animation);

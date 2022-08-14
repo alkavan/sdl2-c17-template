@@ -25,7 +25,7 @@ static void end(struct Profile *const t) {
 
 static void update(struct Profile *const t) {
     // calculate and correct fps
-    t->current_fps = t->counted_frames / (t->fps_timer->get_ticks(t->fps_timer) / 1000.f );
+    t->current_fps = (float)t->counted_frames / ((float)t->fps_timer->get_ticks(t->fps_timer) / 1000.f );
 
     if(t->current_fps > MAX_FPS_VALUE)
     {
