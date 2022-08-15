@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 17)
 
 # project, languages, and version
-project(sdl2_c17 LANGUAGES C VERSION 0.2.1)
+project(sdl2_c17 LANGUAGES C VERSION 0.2.2)
 
 # generated code
 configure_file(version_config.h.in ${CMAKE_BINARY_DIR}/generated/version_config.h)
