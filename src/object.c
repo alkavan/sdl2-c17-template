@@ -5,9 +5,11 @@ static void set_position(Object *const t, Vec2 position) {
     t->position.y = position.y;
 }
 
-static void set_rotation(Object *const t, Vec2 rotation) {
-    t->rotation.x = rotation.x;
-    t->rotation.y = rotation.y;
+static void set_rotation(Object *const t, Mat2 rotation) {
+    t->rotation.m11 = rotation.m11;
+    t->rotation.m12 = rotation.m12;
+    t->rotation.m21 = rotation.m21;
+    t->rotation.m22 = rotation.m22;
 }
 
 static void translate(Object *const t, Vec2 translation) {
@@ -16,19 +18,14 @@ static void translate(Object *const t, Vec2 translation) {
     t->position.y = result.y;
 }
 
-static void rotate(Object *const t, Vec2 rotation) {
-    Vec2 result = svec2_add(t->rotation, rotation);
-    t->rotation.x = result.x;
-    t->rotation.y = result.y;
+static void rotate(Object *const t, float degrees) {
+    Mat2 rotation = smat2_rotation_z(to_radians(degrees));
+    set_rotation(t, rotation);
 }
 
 static float px(Object *const t) { return t->position.x; }
 
 static float py(Object *const t) { return t->position.y; }
-
-static float rx(Object *const t) { return t->rotation.x; }
-
-static float ry(Object *const t) { return t->rotation.y; }
 
 Object *object_new() {
     Object *object = (Object*) malloc(sizeof(Object));
@@ -41,11 +38,8 @@ Object *object_new() {
     object->px = &px;
     object->py = &py;
 
-    object->rx = &rx;
-    object->ry = &ry;
-
     object->position = (Vec2){0.0f, 0.0f};
-    object->rotation = (Vec2){0.0f, 0.0f};
+    object->rotation = smat2_rotation_z(to_radians(0));
 
     return object;
 }

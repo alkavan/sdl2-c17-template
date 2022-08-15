@@ -53,7 +53,12 @@ static void render(Sprite *const t, SDL_Renderer *renderer) {
             (float)t->frame_size.y
     };
 
-    SDL_RenderCopyF(renderer, t->texture, &src_rect, &dest_rect);
+    SDL_FPoint center = {offset.x, offset.y};
+
+    float angle = (float)mat2_to_deg(t->object->rotation);
+
+    SDL_RenderCopyExF(renderer, t->texture, &src_rect, &dest_rect,
+                      angle, &center, SDL_FLIP_NONE);
 }
 
 static void next(Sprite *const t) {

@@ -146,8 +146,20 @@ int main()
         pref_text->update(pref_text, text_render_context.pref, COLOR_RED);
 
         // mouse text
-        sprintf(text_render_context.mouse, "mouse (%d, %d)",
-                input_context.mouse_position.x, input_context.mouse_position.y);
+        Vec2 ship_direction = svec2_subtract(
+                svec2_assign_vec2i(input_context.mouse_position),
+                ship_sprite->object->position
+                );
+        ship_direction = svec2_normalize(ship_direction);
+
+        // TODO: get this out of here
+        float direction_deg = (float)vec2_to_deg(svec2_rotate(ship_direction, to_radians(90)));
+        Mat2 ship_rotation = smat2_rotation_z(to_radians(direction_deg));
+        ship_sprite->object->set_rotation(ship_sprite->object, ship_rotation);
+        float ship_deg = (float)mat2_to_deg(ship_rotation);
+
+        sprintf(text_render_context.mouse, "mouse (%d, %d) dir (%f, %f) deg: %f",
+                input_context.mouse_position.x, input_context.mouse_position.y, ship_direction.x, ship_direction.y, ship_deg);
         mouse_text->update(mouse_text, text_render_context.mouse, COLOR_RED);
 
         // ship text

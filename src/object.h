@@ -9,17 +9,15 @@
 struct Object {
     struct {
         void (*set_position)(struct Object *const, Vec2 position);
-        void (*set_rotation)(struct Object *const, Vec2 rotation);
+        void (*set_rotation)(struct Object *const, Mat2 rotation);
         void (*translate)(struct Object *const, Vec2 translation);
-        void (*rotate)(struct Object *const, Vec2 rotation);
+        void (*rotate)(struct Object *const, float degrees);
         float (*px)(struct Object *const);
         float (*py)(struct Object *const);
-        float (*rx)(struct Object *const);
-        float (*ry)(struct Object *const);
     };
 
     Vec2 position;
-    Vec2 rotation;
+    Mat2 rotation;
 };
 
 typedef struct Object Object;

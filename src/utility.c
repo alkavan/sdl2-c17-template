@@ -1,5 +1,7 @@
+#include <math.h>
 #include <SDL2/SDL_image.h>
 #include "utility.h"
+#include "types.h"
 
 /**
  * Creates SDL_Surface from image file
@@ -39,4 +41,45 @@ void load_bitmap(SDL_Surface **surface, const char* const filename) {
  */
 bool is_fraction(double f) {
     return fmod(f, 1) == 0.0 ? false : true;
+}
+
+/**
+ * Convert 2d vector to radians
+ *
+ * @param v
+ * @return
+ */
+double vec2_to_rad(Vec2 v) {
+    return atan2(v.y, v.x);
+}
+
+/**
+ * Convert 2d matrix to radians
+ *
+ * @param m
+ * @return
+ */
+double mat2_to_rad(Mat2 m) {
+    return atan2(m.m21, m.m22);
+}
+
+/**
+ * Convert 2d vector to degrees
+ *
+ * @param v
+ * @return
+ */
+double vec2_to_deg(Vec2 v) {
+    return (vec2_to_rad(v) / M_PI) * 180.0;
+}
+
+
+/**
+ * Convert 2d matrix to degrees
+ *
+ * @param m
+ * @return
+ */
+double mat2_to_deg(Mat2 m) {
+    return (mat2_to_rad(m) / M_PI) * 180.0;
 }
