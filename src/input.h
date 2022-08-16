@@ -6,6 +6,6 @@
 #include "app.h"
 #include "context.h"
 
-void handle_input(App *app, GameInputContext *context, float dt);
+void handle_input(App *app, GameInputContext *context);
 
 #endif //SDL2_C17_INPUT_H

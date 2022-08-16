@@ -12,34 +12,24 @@ void set_thrust(Control *const t, const Vec2 thrust)
     t->thrust.y = thrust.y;
 }
 
-void set_destination(Control *const t, const Vec2 destination)
+static void move_left(Control *const t)
 {
-    t->destination.x = destination.x;
-    t->destination.y = destination.y;
+    t->thrust.x = -BASE_THRUST;
 }
 
-static void move_left(Control *const t, const float dt)
+static void move_right(Control *const t)
 {
-    t->velocity.x = t->base_velocity * dt;
-    t->thrust.x = -t->base_thrust * dt;
+    t->thrust.x = BASE_THRUST;
 }
 
-static void move_right(Control *const t, const float dt)
+static void move_forward(Control *const t)
 {
-    t->velocity.x = t->base_velocity * dt;
-    t->thrust.x = t->base_thrust * dt;
+    t->thrust.y = -BASE_THRUST;
 }
 
-static void move_forward(Control *const t, const float dt)
+static void move_backwards(Control *const t)
 {
-    t->velocity.y = t->base_velocity * dt;
-    t->thrust.y = -t->base_thrust * dt;
-}
-
-static void move_backwards(Control *const t, const float dt)
-{
-    t->velocity.y = t->base_velocity * dt;
-    t->thrust.y = t->base_thrust * dt;
+    t->thrust.y = BASE_THRUST;
 }
 
 static void stop_x(Control *const t)
@@ -52,7 +42,7 @@ static void stop_y(Control *const t)
     t->thrust.y = 0.0f;
 }
 
-static void handle(Control *const t, const float dt, const SDL_KeyboardEvent *const keyboard_event) {
+static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_event) {
     // handle key up event
     if(keyboard_event->state == SDL_RELEASED) {
 
@@ -79,19 +69,19 @@ static void handle(Control *const t, const float dt, const SDL_KeyboardEvent *co
     switch(keyboard_event->keysym.sym)
     {
         case SDLK_a: {
-            move_left(t, dt);
+            move_left(t);
             break;
         }
         case SDLK_w: {
-            move_forward(t, dt);
+            move_forward(t);
             break;
         }
         case SDLK_s: {
-            move_backwards(t, dt);
+            move_backwards(t);
             break;
         }
         case SDLK_d: {
-            move_right(t, dt);
+            move_right(t);
             break;
         }
         default:
@@ -100,29 +90,42 @@ static void handle(Control *const t, const float dt, const SDL_KeyboardEvent *co
 }
 
 static void update(Control *const t, const float dt, Object *const object) {
-    Vec2 v = (Vec2){
-        t->thrust.x * t->velocity.x * dt,
-        t->thrust.y * t->velocity.y * dt,
-    };
+    Vec2 gravity = (Vec2){0.0f, 0.0f};
 
-    Vec2 p = svec2_add(object->position, v);
+    // we begin with adding the force of gravity
+    Vec2 force = svec2_multiply_f(gravity, t->mass);
+
+    // add thrust to force vector
+    force = svec2_add(force, t->thrust);
+
+    Vec2 acceleration = (Vec2){force.x / t->mass, force.y / t->mass};
+
+    t->velocity.x = acceleration.x * dt;
+    t->velocity.y = acceleration.y * dt;
+
+    if(t->velocity.x > MAX_VELOCITY) {
+        t->velocity.x = MAX_VELOCITY;
+    }
+
+    if(t->velocity.y > MAX_VELOCITY) {
+        t->velocity.y = MAX_VELOCITY;
+    }
+
+    Vec2 p = svec2_add(object->position, t->velocity);
     object->set_position(object, p);
 }
 
-Control *control_new(float base_velocity, float base_thrust) {
+Control *control_new(float mass) {
     Control *control = (Control*) malloc(sizeof(Control));
 
     control->handle = &handle;
     control->update = &update;
     control->set_velocity = &set_velocity;
     control->set_thrust = &set_thrust;
-    control->set_destination = &set_destination;
 
-    control->base_velocity = base_velocity;
-    control->base_thrust = base_thrust;
+    control->mass = mass;
     control->velocity = (Vec2){0.0f, 0.0f};
     control->thrust = (Vec2){0.0f, 0.0f};
-    control->destination = (Vec2){0.0f, 0.0f};
 
     return control;
 }

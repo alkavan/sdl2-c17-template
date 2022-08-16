@@ -1,7 +1,7 @@
 #include "input.h"
 #include "types.h"
 
-void handle_input(App *app, GameInputContext *context, float dt)
+void handle_input(App *app, GameInputContext *context)
 {
     SDL_Event event;
 
@@ -23,7 +23,7 @@ void handle_input(App *app, GameInputContext *context, float dt)
 
         if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
 
-            context->ship_control->handle(context->ship_control, dt, &event.key);
+            context->ship_control->handle(context->ship_control, &event.key);
 
             switch(event.key.keysym.sym)
             {

@@ -130,7 +130,7 @@ int main()
         }
 
         // handle input
-        handle_input(app, &input_context, dt);
+        handle_input(app, &input_context);
 
         // calculate current fps after handling input
         profile->update(profile);
