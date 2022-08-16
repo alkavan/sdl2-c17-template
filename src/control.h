@@ -8,7 +8,8 @@
 #include "types.h"
 
 #define MAX_VELOCITY 10.0f
-#define BASE_THRUST 100.0f
+#define BASE_THRUST 144.0f
+#define SIDE_THRUST_FACTOR 1.5f
 
 struct Control {
     struct {
@@ -22,6 +23,7 @@ struct Control {
 
     Vec2 velocity;
     Vec2 thrust;
+    Vec2 side_thrust;
 };
 
 typedef struct Control Control;

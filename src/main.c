@@ -110,13 +110,13 @@ int main()
     Control* ship_control = control_new(1.0f);
 
     // initialize context objects
-    GameInputContext input_context = (GameInputContext){
+    GameInputContext input_context = (GameInputContext) {
         ship_animation,
         ship_control,
         {0.0f, 0.0f},
         {0.0f, 0.0f},
-        true,
-        true
+        false, // enable/disable debug grid by default, should move to settings.
+        true // enable/disable debug cross by default, should move to settings.
     };
 
     // create profile object

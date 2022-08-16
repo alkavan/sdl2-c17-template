@@ -22,20 +22,31 @@ static void stop_thrust(Control *const t){
     t->thrust.y = 0.0f;
 }
 
+static void apply_side_thrust(Control *const t, Vec2 direction, float angle) {
+    Vec2 side_thrust = {BASE_THRUST/SIDE_THRUST_FACTOR, BASE_THRUST/SIDE_THRUST_FACTOR};
+    Vec2 side_direction = svec2_rotate(direction, angle);
+    t->side_thrust = svec2_multiply(side_thrust, side_direction);
+}
+
+static void stop_side_thrust(Control *const t){
+    t->side_thrust.x = 0.0f;
+    t->side_thrust.y = 0.0f;
+}
+
 static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_event, Vec2 direction) {
     // handle key up event
     if(keyboard_event->state == SDL_RELEASED) {
 
         switch(keyboard_event->keysym.sym)
         {
-            case SDLK_d:
-            case SDLK_a: {
-//                stop_x(t);
-                break;
-            }
             case SDLK_s:
             case SDLK_w: {
                 stop_thrust(t);
+                break;
+            }
+            case SDLK_d:
+            case SDLK_a: {
+                stop_side_thrust(t);
                 break;
             }
             default:
@@ -49,7 +60,7 @@ static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_eve
     switch(keyboard_event->keysym.sym)
     {
         case SDLK_a: {
-//            move_left(t);
+            apply_side_thrust(t, direction, -90.0f);
             break;
         }
         case SDLK_w: {
@@ -62,7 +73,7 @@ static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_eve
             break;
         }
         case SDLK_d: {
-//            move_right(t);
+            apply_side_thrust(t, direction, 90.0f);
             break;
         }
         default:
@@ -78,6 +89,9 @@ static void update(Control *const t, const float dt, Object *const object) {
 
     // add thrust to force vector
     force = svec2_add(force, t->thrust);
+
+    // add side to force vector
+    force = svec2_add(force, t->side_thrust);
 
     Vec2 acceleration = (Vec2){force.x / t->mass, force.y / t->mass};
 
