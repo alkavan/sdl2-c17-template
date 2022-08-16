@@ -46,6 +46,10 @@ int main()
     SDL_Surface *surface_ship = NULL;
     load_image(&surface_ship, "../res/ship1.png");
 
+    // load shot1 sprite image
+    SDL_Surface *surface_shot1 = NULL;
+    load_image(&surface_shot1, "../res/shot1.png");
+
     // load solid tiles image
     SDL_Surface *surface_solid_tiles = NULL;
     load_bitmap(&surface_solid_tiles, "../res/solid-tileset.bmp");
@@ -68,6 +72,13 @@ int main()
             surface_ship
             );
 
+    // create shot sprite
+    Sprite* shot1_sprite = sprite_new(
+            (Vec2){(float)SCREEN_HALF_WIDTH+100, (float)SCREEN_HALF_HEIGHT+100},
+            (Vec2i){16, 16},
+            surface_shot1
+    );
+
     // create solid tileset sprite
     Sprite* solid_tiles_sprite = sprite_new(
             (Vec2){(float)SCREEN_HALF_WIDTH-100, (float)SCREEN_HALF_HEIGHT-100},
@@ -77,6 +88,7 @@ int main()
 
     // animations
     Animation* ship_animation = animation_new(25, true);
+    Animation* shot_animation = animation_new(250, true);
     Animation* tiles_animation = animation_new(100, true);
 
     // create text objects
@@ -95,7 +107,7 @@ int main()
     };
 
     // player control
-    Control* ship_control = control_new(1000.0f, 500.0f);
+    Control* ship_control = control_new(1.0f);
 
     // initialize context objects
     GameInputContext input_context = (GameInputContext){
@@ -113,9 +125,12 @@ int main()
     // initialize profiler and start fps timer
     profile->init(profile);
 
+    // start animations
     ship_animation->start(ship_animation);
+    shot_animation->start(shot_animation);
     tiles_animation->start(tiles_animation);
 
+    // delta time
     float dt;
 
     // render loop
@@ -163,8 +178,9 @@ int main()
         mouse_text->update(mouse_text, text_render_context.mouse, COLOR_RED);
 
         // ship text
-        sprintf(text_render_context.ship, "ship (%f, %f)",
-                ship_sprite->object->position.x, ship_sprite->object->position.y);
+        sprintf(text_render_context.ship, "ship p(%f, %f) v(%f, %f)",
+                ship_sprite->object->position.x, ship_sprite->object->position.y,
+                ship_control->velocity.x, ship_control->velocity.y);
         ship_text->update(ship_text, text_render_context.ship, COLOR_RED);
 
         // help text
@@ -191,6 +207,9 @@ int main()
         // render sprites and handle animations
         ship_sprite->render(ship_sprite, app->renderer);
         ship_animation->sprite(ship_animation, ship_sprite);
+
+        shot1_sprite->render(shot1_sprite, app->renderer);
+        shot_animation->sprite(shot_animation, shot1_sprite);
 
         solid_tiles_sprite->render(solid_tiles_sprite, app->renderer);
         tiles_animation->sprite(tiles_animation, solid_tiles_sprite);
