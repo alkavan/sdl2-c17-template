@@ -83,3 +83,7 @@ double vec2_to_deg(Vec2 v) {
 double mat2_to_deg(Mat2 m) {
     return (mat2_to_rad(m) / M_PI) * 180.0;
 }
+
+Vec2 relative_mouse_position(Vec2 mouse_position, Vec2 object_position) {
+    return svec2_subtract(mouse_position, object_position);
+}

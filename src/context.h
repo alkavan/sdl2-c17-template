@@ -5,10 +5,9 @@
 #include "control.h"
 
 struct GameInputContext {
-    Sprite* ship_sprite;
     Animation* ship_animation;
     Control* ship_control;
-    Vec2i mouse_position;
+    Vec2 mouse_position;
     bool show_debug_grid;
     bool show_debug_cross;
 };

@@ -17,8 +17,8 @@ void handle_input(App *app, GameInputContext *context)
         }
 
         if(event.type == SDL_MOUSEMOTION) {
-            context->mouse_position.x = event.motion.x;
-            context->mouse_position.y = event.motion.y;
+            context->mouse_position.x = (float)event.motion.x;
+            context->mouse_position.y = (float)event.motion.y;
         }
 
         if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {

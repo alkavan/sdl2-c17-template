@@ -14,4 +14,6 @@ double vec2_to_deg(Vec2 v);
 double mat2_to_rad(Mat2 m);
 double mat2_to_deg(Mat2 m);
 
+Vec2 relative_mouse_position(Vec2 mouse_position, Vec2 object_position);
+
 #endif //SDL2_C17_UTILITY_H

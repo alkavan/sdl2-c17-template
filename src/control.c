@@ -103,10 +103,12 @@ static void update(Control *const t, const float dt, Object *const object) {
     t->velocity.x = acceleration.x * dt;
     t->velocity.y = acceleration.y * dt;
 
+    // cap x velocity to maximum velocity
     if(t->velocity.x > MAX_VELOCITY) {
         t->velocity.x = MAX_VELOCITY;
     }
 
+    // cap y velocity to maximum velocity
     if(t->velocity.y > MAX_VELOCITY) {
         t->velocity.y = MAX_VELOCITY;
     }

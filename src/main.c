@@ -111,7 +111,6 @@ int main()
 
     // initialize context objects
     GameInputContext input_context = (GameInputContext){
-        ship_sprite,
         ship_animation,
         ship_control,
         {0, 0},
@@ -150,6 +149,7 @@ int main()
         // calculate current fps after handling input
         profile->update(profile);
 
+
         ship_control->update(ship_control, dt, ship_sprite->object);
 
         // fps text
@@ -160,9 +160,9 @@ int main()
         sprintf(text_render_context.pref, "dt: %f", dt);
         pref_text->update(pref_text, text_render_context.pref, COLOR_RED);
 
-        // mouse text
-        Vec2 ship_direction = svec2_subtract(
-                svec2_assign_vec2i(input_context.mouse_position),
+        // ship direction relative to mouse position
+        Vec2 ship_direction = relative_mouse_position(
+                input_context.mouse_position,
                 ship_sprite->object->position
                 );
         ship_direction = svec2_normalize(ship_direction);
@@ -173,12 +173,12 @@ int main()
         ship_sprite->object->set_rotation(ship_sprite->object, ship_rotation);
         float ship_deg = (float)mat2_to_deg(ship_rotation);
 
-        sprintf(text_render_context.mouse, "mouse (%d, %d) dir (%f, %f) deg: %f",
+        sprintf(text_render_context.mouse, "mouse (%.0f, %.0f) dir (%.2f, %.2f) deg: %.2f",
                 input_context.mouse_position.x, input_context.mouse_position.y, ship_direction.x, ship_direction.y, ship_deg);
         mouse_text->update(mouse_text, text_render_context.mouse, COLOR_RED);
 
         // ship text
-        sprintf(text_render_context.ship, "ship p(%f, %f) v(%f, %f)",
+        sprintf(text_render_context.ship, "ship p(%.2f, %.2f) v(%.2f, %.2f)",
                 ship_sprite->object->position.x, ship_sprite->object->position.y,
                 ship_control->velocity.x, ship_control->velocity.y);
         ship_text->update(ship_text, text_render_context.ship, COLOR_RED);
@@ -201,8 +201,10 @@ int main()
             draw_debug_cross(app->renderer, COLOR_RED);
         }
 
-        Vec2 mv = (Vec2){(float)input_context.mouse_position.x, (float)input_context.mouse_position.y};
-        draw_debug_line(app->renderer, COLOR_GREEN, mv, ship_sprite->object->position);
+        draw_debug_line(app->renderer, COLOR_GREEN,
+                        input_context.mouse_position,
+                        ship_sprite->object->position
+                        );
 
         // render sprites and handle animations
         ship_sprite->render(ship_sprite, app->renderer);
