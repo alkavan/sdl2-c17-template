@@ -9,7 +9,7 @@ struct Sprite {
     struct {
         void (*update)(struct Sprite *const, float dt);
         void (*render)(struct Sprite *const, SDL_Renderer *renderer);
-        void (*next)(struct Sprite *const);
+        void (*next)(struct Sprite *const, bool loop);
     };
 
     Object* object;

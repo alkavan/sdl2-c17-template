@@ -10,7 +10,7 @@ static void sprite(Animation *const t, Sprite *const sprite) {
         return;
     }
 
-    sprite->next(sprite);
+    sprite->next(sprite, t->loop);
     t->last_frame_tick = t->timer->get_ticks(t->timer);
 }
 

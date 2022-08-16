@@ -61,11 +61,13 @@ static void render(Sprite *const t, SDL_Renderer *renderer) {
                       angle, &center, SDL_FLIP_NONE);
 }
 
-static void next(Sprite *const t) {
+static void next(Sprite *const t, bool loop) {
     int max = t->grid.x * t->grid.y;
 
     if(t->frame_index >= (max - 1)) {
-        t->frame_index = 0;
+        if(loop) {
+            t->frame_index = 0;
+        }
         return;
     }
 
