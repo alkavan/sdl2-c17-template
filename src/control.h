@@ -12,7 +12,7 @@
 
 struct Control {
     struct {
-        void (*handle)(struct Control *const, const SDL_KeyboardEvent *const keyboard_event);
+        void (*handle)(struct Control *const, const SDL_KeyboardEvent *const keyboard_event, Vec2 direction);
         void (*update)(struct Control *const, const float dt, Object *const object);
         void (*set_velocity)(struct Control *const, const Vec2 velocity);
         void (*set_thrust)(struct Control *const, const Vec2 thrust);

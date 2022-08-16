@@ -7,6 +7,7 @@
 struct GameInputContext {
     Animation* ship_animation;
     Control* ship_control;
+    Vec2 ship_direction;
     Vec2 mouse_position;
     bool show_debug_grid;
     bool show_debug_cross;

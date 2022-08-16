@@ -12,37 +12,17 @@ void set_thrust(Control *const t, const Vec2 thrust)
     t->thrust.y = thrust.y;
 }
 
-static void move_left(Control *const t)
-{
-    t->thrust.x = -BASE_THRUST;
+static void apply_thrust(Control *const t, Vec2 direction) {
+    Vec2 thrust = {BASE_THRUST, BASE_THRUST};
+    t->thrust = svec2_multiply(thrust, direction);
 }
 
-static void move_right(Control *const t)
-{
-    t->thrust.x = BASE_THRUST;
-}
-
-static void move_forward(Control *const t)
-{
-    t->thrust.y = -BASE_THRUST;
-}
-
-static void move_backwards(Control *const t)
-{
-    t->thrust.y = BASE_THRUST;
-}
-
-static void stop_x(Control *const t)
-{
+static void stop_thrust(Control *const t){
     t->thrust.x = 0.0f;
-}
-
-static void stop_y(Control *const t)
-{
     t->thrust.y = 0.0f;
 }
 
-static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_event) {
+static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_event, Vec2 direction) {
     // handle key up event
     if(keyboard_event->state == SDL_RELEASED) {
 
@@ -50,12 +30,12 @@ static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_eve
         {
             case SDLK_d:
             case SDLK_a: {
-                stop_x(t);
+//                stop_x(t);
                 break;
             }
             case SDLK_s:
             case SDLK_w: {
-                stop_y(t);
+                stop_thrust(t);
                 break;
             }
             default:
@@ -69,19 +49,20 @@ static void handle(Control *const t, const SDL_KeyboardEvent *const keyboard_eve
     switch(keyboard_event->keysym.sym)
     {
         case SDLK_a: {
-            move_left(t);
+//            move_left(t);
             break;
         }
         case SDLK_w: {
-            move_forward(t);
+            apply_thrust(t, direction);
             break;
         }
         case SDLK_s: {
-            move_backwards(t);
+            Vec2 direction_neg = svec2_negative(direction);
+            apply_thrust(t, direction_neg);
             break;
         }
         case SDLK_d: {
-            move_right(t);
+//            move_right(t);
             break;
         }
         default:

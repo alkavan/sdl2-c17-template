@@ -113,7 +113,8 @@ int main()
     GameInputContext input_context = (GameInputContext){
         ship_animation,
         ship_control,
-        {0, 0},
+        {0.0f, 0.0f},
+        {0.0f, 0.0f},
         true,
         true
     };
@@ -165,7 +166,10 @@ int main()
                 input_context.mouse_position,
                 ship_sprite->object->position
                 );
+
         ship_direction = svec2_normalize(ship_direction);
+        input_context.ship_direction.x = ship_direction.x;
+        input_context.ship_direction.y = ship_direction.y;
 
         // TODO: get this out of here
         float direction_deg = (float)vec2_to_deg(svec2_rotate(ship_direction, to_radians(90)));
@@ -207,14 +211,14 @@ int main()
                         );
 
         // render sprites and handle animations
+        solid_tiles_sprite->render(solid_tiles_sprite, app->renderer);
+        tiles_animation->sprite(tiles_animation, solid_tiles_sprite);
+
         ship_sprite->render(ship_sprite, app->renderer);
         ship_animation->sprite(ship_animation, ship_sprite);
 
         shot1_sprite->render(shot1_sprite, app->renderer);
         shot_animation->sprite(shot_animation, shot1_sprite);
-
-        solid_tiles_sprite->render(solid_tiles_sprite, app->renderer);
-        tiles_animation->sprite(tiles_animation, solid_tiles_sprite);
 
         // render texts
         fps_text->render(fps_text, app->renderer);

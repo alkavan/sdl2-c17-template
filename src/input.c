@@ -23,7 +23,7 @@ void handle_input(App *app, GameInputContext *context)
 
         if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
 
-            context->ship_control->handle(context->ship_control, &event.key);
+            context->ship_control->handle(context->ship_control, &event.key, context->ship_direction);
 
             switch(event.key.keysym.sym)
             {
